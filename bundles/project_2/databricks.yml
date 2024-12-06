@@ -1,7 +1,7 @@
 # This is a Databricks asset bundle definition for demo.
 # See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
 bundle:
-  name: fcd_analytics
+  name: project_2
   databricks_cli_version: ">= 0.235.0"
 
 include:
@@ -9,6 +9,11 @@ include:
 
 workspace:
   root_path: /bundles/${bundle.name}
+
+sync:
+    paths: 
+        - ../../src/utilities # add/sync shared code as part of this bundle as well
+        - ./src # current bundle source files
   
 targets:
   # user deploy / user PAT 

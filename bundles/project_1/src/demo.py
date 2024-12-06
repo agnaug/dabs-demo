@@ -20,9 +20,3 @@ utility_function()
 
 print(f"""{catalog_name=}""")
 print(f"""{source_system=}""")
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC
-# MAGIC show schemas in ${catalog_name};

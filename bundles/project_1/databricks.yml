@@ -1,0 +1,29 @@
+# This is a Databricks asset bundle definition for demo.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: project_1
+  databricks_cli_version: ">= 0.235.0"
+
+include:
+  - resources/*.yml
+
+workspace:
+  root_path: /bundles/${bundle.name}
+
+sync:
+    paths: 
+        - ../../src/utilities # add/sync shared code as part of this bundle as well
+        - ./src # current bundle source files
+  
+targets:
+  # user deploy / user PAT 
+  user_dev:
+    mode: development
+    default: true
+
+    workspace:
+      host: https://dev.com
+      root_path: /Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+    
+    variables:
+      email_notifications: {} # no notifications

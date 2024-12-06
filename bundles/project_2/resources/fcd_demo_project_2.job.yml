@@ -1,0 +1,48 @@
+resources:
+  jobs:
+    fcd_demo_project_2:
+      name: 'fcd_demo_project_2'
+      job_clusters:
+        - job_cluster_key: job-cluster
+          new_cluster:
+            num_workers: 1
+            policy_id: ${var.fcd_job_policy_id}
+            spark_conf:
+              "spark.sql.session.timeZone": "Australia/Melbourne"
+            data_security_mode: USER_ISOLATION
+            spark_env_vars:
+              PYSPARK_PYTHON: /databricks/python3/bin/python3
+            aws_attributes:
+              zone_id: auto
+              first_on_demand: 1
+              spot_bid_price_percent: 100
+              availability: SPOT_WITH_FALLBACK
+            enable_elastic_disk: true
+            runtime_engine: STANDARD
+            node_type_id: i3.xlarge
+            spark_version: ${var.lts_spark_version}
+      tasks:
+        - task_key: demo_task
+          job_cluster_key: job-cluster
+          email_notifications: ${var.email_notifications}
+          run_if: ALL_SUCCESS
+          notebook_task:
+            source: WORKSPACE
+            notebook_path: ${workspace.root_path}/files/bundles/project_2/src/demo
+      parameters:
+        - name: catalog_name
+          default: fcd_dev
+        - name: source_system
+          default: demo2
+        - name: bundle_path
+          default: ${workspace.root_path}/files
+      email_notifications: {}
+      queue:
+        enabled: true
+      description: Demo Workflow
+      max_concurrent_runs: 4
+      health:
+        rules:
+          - metric: RUN_DURATION_SECONDS
+            op: GREATER_THAN
+            value: 600
