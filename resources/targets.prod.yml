@@ -1,0 +1,26 @@
+targets:
+  # CICD deploy only / SP PAT/OAuth Secret
+  prod:
+    mode: production
+    workspace:
+      host: https://prod.com
+      
+    variables:
+      catalog_name: fcd_prod
+      service_principal_name: 
+        lookup: 
+          service_principal: fcd_prod_sp
+      email_notifications:
+        on_failure:
+          - aia-prd@aia.com
+        on_duration_warning_threshold_exceeded:
+          - aia-prd@aia.com
+
+    run_as:
+      service_principal_name: ${var.service_principal_name}
+
+    permissions:
+      - group_name: fcd_prod_admins
+        level: CAN_MANAGE
+      - group_name: fcd_prod_data_engineers
+        level: CAN_RUN

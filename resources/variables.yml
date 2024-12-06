@@ -1,0 +1,24 @@
+# assumes default vars values to match default env
+# for fcd_analytics demo - the default env = dev
+variables:
+
+  fcd_job_policy_id:
+    description: "Job Compute Policy ID"
+    lookup:
+      # assumes same policy names across all environments (policy rules might be different)
+      cluster_policy: "fcd_job_cluster" 
+
+  lts_spark_version:
+    default: 15.4.x-scala2.12
+
+  catalog_name:
+    description: "Catalog Name"
+    default: fcd_dev
+
+  service_principal_name:
+    description: "Service Principal Name"
+    default: "" # assumes different sp name per workspace/environment
+
+  email_notifications:
+    type: complex
+    description: "This is the default list of email recipients where any notification event is captured"

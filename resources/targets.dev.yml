@@ -1,0 +1,41 @@
+targets:
+  # CICD deploy only / SP PAT/OAuth Secret
+  dev:
+    mode: production
+    workspace:
+      host: https://dev.com
+
+    presets:
+      trigger_pause_status: PAUSED
+
+    variables:
+      catalog_name: fcd_dev
+      service_principal_name: 
+        lookup: 
+          service_principal: fcd_dev_svp
+      email_notifications:
+        on_failure:
+          - dev@aia.com
+        on_duration_warning_threshold_exceeded:
+          - dev@aia.com
+
+    run_as:
+      service_principal_name: ${var.service_principal_name}
+
+    # top-level permissions for resources / use least privilege rule
+    permissions:
+      - group_name: fcd_dev_admins
+        level: CAN_MANAGE
+      - group_name: fcd_dev_data_engineers
+        level: CAN_MANAGE
+      - group_name: fcd_dev_test_users
+        level: CAN_VIEW
+
+    # resource-level permissions / overwrite top-level permissions
+    resources:
+      jobs:
+        fcd_demo_project_1:
+          permissions:
+            - group_name: fcd_dev_test_users
+              level: CAN_MANAGE_RUN
+            

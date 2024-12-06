@@ -1,0 +1,42 @@
+resources: 
+  jobs:
+    fcd_demo_project_1:
+      name: fcd_demo_project_1
+      description: "Demo Workflow"
+      
+      email_notifications: ${var.email_notifications}
+
+      health:
+        rules:
+          - metric: RUN_DURATION_SECONDS
+            op: GREATER_THAN
+            value: 600
+
+      tasks:
+        - task_key: demo_task
+          notebook_task:
+            notebook_path: ${workspace.root_path}/files/pipelines/project_1/demo
+            source: WORKSPACE
+          job_cluster_key: job-cluster
+      
+      job_clusters:
+        - job_cluster_key: job-cluster
+          new_cluster:
+            policy_id: ${var.fcd_job_policy_id}
+            apply_policy_default_values: true
+            spark_version: ${var.lts_spark_version}
+            spark_env_vars:
+              PYSPARK_PYTHON: /databricks/python3/bin/python3
+            spark_conf:
+              spark.sql.session.timeZone: Australia/Melbourne
+            data_security_mode: USER_ISOLATION
+            runtime_engine: STANDARD
+            num_workers: 1
+
+      parameters:
+        - name: catalog_name
+          default: ${var.catalog_name}
+        - name: source_system
+          default: demo
+        - name: bundle_path
+          default: ${workspace.root_path}/files
